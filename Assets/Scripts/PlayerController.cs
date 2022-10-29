@@ -6,29 +6,29 @@ public class PlayerController : MonoBehaviour
 {
 
     [SerializeField] float jumpForce;
-    [SerializeField] float jumpLength;
     [SerializeField] float moveSpeed;
-    [SerializeField] float gravity = -9.81f;
-    [SerializeField] float gravityScale = 5;
-    [SerializeField] float velocity;
-    [SerializeField] float distanceToCheck;
+    [SerializeField] float vertSpeed;
+    [SerializeField] float vertSpeedMultiplier;
+    [SerializeField] float gravityScale;
+    [SerializeField] float fallingGravityScale;
     [SerializeField] Sprite batSprite;
     [SerializeField] float _batFormTimer;
     [SerializeField] float _canBatTimer;
     private SpriteRenderer spriteRenderer;
-    private Sprite vampForm; 
-
-    private bool isFalling;
+    private Sprite vampForm;
+    private Rigidbody2D playerRB;
     private bool canBat;
     private bool isBat;
 
     // Start is called before the first frame update
     void Start()
     {
-        isFalling = false;
+
         canBat = true;
         isBat = false;
         spriteRenderer = GetComponent<SpriteRenderer>();
+        playerRB = GetComponent<Rigidbody2D>();
+
         vampForm = this.GetComponent<SpriteRenderer>().sprite;
     }
 
@@ -36,41 +36,49 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         // Jumping: gamedevbeginner.com/how-to-jump-in-unity-with-or-without-physics/#jump_without_pyhsics_unity
+        if (isBat)
+        {
+            playerRB.velocity = Vector2.zero;
+            playerRB.isKinematic = true;
+            vertSpeed = Input.GetAxis("Vertical") * vertSpeedMultiplier;
 
-        if (isFalling || !GroundCheck(distanceToCheck)) 
-        {
-            velocity += gravity * gravityScale * Time.deltaTime;
-        } 
-        
-        if (GroundCheck(distanceToCheck))
-        {
-            velocity = 0;
-            isFalling = false;
+        }
+        else if (playerRB.velocity.y >= 0)
+            vertSpeed = 0;
+            playerRB.gravityScale = gravityScale;
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                velocity += jumpForce;
-                isFalling = true;
+            playerRB.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             }
+
+        else 
+        {
+            playerRB.gravityScale = fallingGravityScale;
         }
+
+
 
         // Check for Bat form
         if (Input.GetKeyDown(KeyCode.LeftShift) && canBat)
         {
+            isBat = true;
             canBat = false;
-            BatForm();
+
             StartCoroutine(BatFormTimer());
             StartCoroutine(CanBatTimer());
 
         }
-        
+
         // Movement
 
-        transform.Translate(new Vector3(moveSpeed, velocity, 0) * Time.deltaTime);
+        //transform.Translate(new Vector3(moveSpeed, vertSpeed, 0) * Time.deltaTime);
 
+        //this.transform.position += this.transform.right * moveSpeed * Time.deltaTime;
+        transform.position += new Vector3(moveSpeed, vertSpeed, 0) * Time.deltaTime;
     }
 
-    private bool GroundCheck(float distanceToCheck)
+    /*private bool GroundCheck(float distanceToCheck)
     {
         bool isGrounded = false;
         RaycastHit2D[] _allHits;
@@ -84,22 +92,16 @@ public class PlayerController : MonoBehaviour
         }
 
         return isGrounded;
-    }
-
-    void BatForm()
-    {
-        spriteRenderer.sprite = batSprite;
-        isBat = true;
-        velocity = 0;
-
-    }
+    }*/
 
     IEnumerator BatFormTimer()
     {
+        spriteRenderer.sprite = batSprite;
         Debug.Log("In BatFormTimer");
         yield return new WaitForSeconds(_batFormTimer);
         isBat = false;
         spriteRenderer.sprite = vampForm;
+        playerRB.isKinematic = false;
     }
 
     IEnumerator CanBatTimer()

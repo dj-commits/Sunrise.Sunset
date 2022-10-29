@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3925957045183214429}
   - component: {fileID: 3925957045183214428}
+  - component: {fileID: 7811135107266690910}
   - component: {fileID: -3629183991053896817}
   - component: {fileID: 3925957045183214431}
   m_Layer: 0
@@ -86,6 +87,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!50 &7811135107266690910
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3925957045183214426}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!61 &-3629183991053896817
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -133,3 +155,4 @@ MonoBehaviour:
   distanceToCheck: 0.3
   batSprite: {fileID: 21300000, guid: 7f4376835af7e5b49946740ae2d5a0fa, type: 3}
   _batFormTimer: 2
+  _canBatTimer: 0
