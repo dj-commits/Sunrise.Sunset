@@ -19,9 +19,9 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        timeToSunrise -= Time.deltaTime;
-        if (timeToSunrise < 0)
+        if (timeToSunrise > 0)
         {
+            timeToSunrise -= Time.deltaTime;
             DisplayTime(timeToSunrise);
         }
         else
